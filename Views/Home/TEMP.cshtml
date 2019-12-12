@@ -1,0 +1,70 @@
+<!-- DASHBOARD PRACTICE -->
+@model List<Wedding>
+
+<h1>Welcome to the Wedding Planner</h1>
+<a href="/logout">Log Out</a>
+
+
+<table class="table table-striped" style="margin-top: 30px;">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Wedding</th>
+      <th scope="col">Date</th>
+      <th scope="col">Guest</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+
+    @foreach(var wedding in Model){
+    <tbody>
+        <tr>
+        <td><a href="show/@wedding.WeddingId">@wedding.WedderOne & @wedding.WedderTwo</a></td>
+        <td>@wedding.Date.ToString("MMMM dd, yyyy")</td>
+        <td>@wedding.WeddingsToAttend.Count</td>
+        @if(wedding.UserId==ViewBag.UserId){
+        <td>
+          <form method="post" asp-action="delete" asp-controller="Home" asp-route-weddingId="@wedding.WeddingId">
+            <button>Delete</button>
+          </form>
+        </td>
+        break;
+        }
+        else {
+          <td>
+              <form method="post" asp-action="rsvp" asp-controller="Home" asp-route-weddingId="@wedding.WeddingId">
+              <button>RSVP</button>
+              </form>
+            </td>
+        }
+      
+        
+        @foreach (var rsvp in wedding.WeddingsToAttend)
+        {
+            @if(rsvp.UserId == ViewBag.UserId && rsvp.WeddingId == wedding.WeddingId) {
+              <td>
+                <form method="post" asp-action="rsvp" asp-controller="Home" asp-route-weddingId="@wedding.WeddingId">
+                <button>UNRSVP</button>
+                </form>
+              </td>
+              break;
+            }
+            else{
+              <td>
+                <form method="post" asp-action="rsvp" asp-controller="Home" asp-route-weddingId="@wedding.WeddingId">
+                <button>RSVP</button>
+                </form>
+              </td>
+              break;
+            }
+        }
+        </tr>
+    </tbody>
+    }
+</table>
+
+
+
+<a href="/new"><button type="button">New Wedding</button></a>
+
+
+  
